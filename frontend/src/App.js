@@ -8,6 +8,10 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
+  // NEW (for update)
+  const [editId, setEditId] = useState(null);
+  const [editText, setEditText] = useState("");
+
   // Fetch Tasks
   const fetchTasks = async () => {
     try {
@@ -15,7 +19,7 @@ function App() {
       const res = await API.get("/");
       setTasks(res.data);
       setError("");
-    } catch (err) {
+    } catch {
       setError("Failed to fetch tasks");
     } finally {
       setLoading(false);
@@ -61,7 +65,19 @@ function App() {
     }
   };
 
-  // Search Tasks
+  // UPDATE TASK (PUT)
+  const updateTask = async () => {
+    try {
+      await API.put(`/${editId}`, { title: editText });
+      setEditId(null);
+      setEditText("");
+      fetchTasks();
+    } catch {
+      setError("Failed to update task");
+    }
+  };
+
+  // Search
   const handleSearch = async () => {
     try {
       setLoading(true);
@@ -118,18 +134,41 @@ function App() {
               padding: "10px",
             }}
           >
-            <span
-              onClick={() => toggleStatus(task._id, task.status)}
-              style={{
-                cursor: "pointer",
-                textDecoration:
-                  task.status === "completed" ? "line-through" : "none",
-              }}
-            >
-              {task.title}
-            </span>
+            {editId === task._id ? (
+              <>
+                <input
+                  value={editText}
+                  onChange={(e) => setEditText(e.target.value)}
+                />
+                <button onClick={updateTask}>Save</button>
+              </>
+            ) : (
+              <>
+                <span
+                  onClick={() => toggleStatus(task._id, task.status)}
+                  style={{
+                    cursor: "pointer",
+                    textDecoration:
+                      task.status === "completed" ? "line-through" : "none",
+                  }}
+                >
+                  {task.title}
+                </span>
 
-            <button onClick={() => deleteTask(task._id)}>❌</button>
+                <div>
+                  <button
+                    onClick={() => {
+                      setEditId(task._id);
+                      setEditText(task.title);
+                    }}
+                  >
+                    ✏️
+                  </button>
+
+                  <button onClick={() => deleteTask(task._id)}>❌</button>
+                </div>
+              </>
+            )}
           </li>
         ))}
       </ul>
