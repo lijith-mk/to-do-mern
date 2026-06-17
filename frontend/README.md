@@ -1,17 +1,41 @@
- To-Do List Frontend
+# To-Do App Frontend
 
-This is a simple React frontend for a To-Do List application. It connects to a backend API and allows users to manage their tasks easily.
- Features
+This is the frontend of the To-Do application built using React. It connects with the backend APIs and displays tasks dynamically.
 
-- Add new tasks  
-- Delete tasks  
-- Mark tasks as completed or pending  
-- Search tasks by title  
-- Loading indicators and error handling  
-- Responsive design  
+## Technologies Used
 
- Setup Instructions
+* React.js
+* Axios
+* useState, useEffect
 
- 1. Install dependencies
+## Features
 
-npm install
+* Display all tasks
+* Add new task
+* Delete task
+* Mark task as completed
+* Search tasks
+* Dynamic UI updates
+* Loading and error handling
+
+## Setup Instructions
+
+1. Go to frontend folder
+
+2. Install dependencies
+   npm install
+
+3. Start the app
+   npm start
+
+## API Integration
+
+Axios is used to connect with backend APIs. All CRUD operations are handled through API calls.
+
+## User Interaction
+
+* User can add tasks using input field
+* Click on task to mark as complete
+* Delete button to remove task
+* Search bar to filter tasks
+
