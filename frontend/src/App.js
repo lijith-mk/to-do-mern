@@ -61,7 +61,7 @@ function App() {
     }
   };
 
-  // Search
+  // Search Tasks
   const handleSearch = async () => {
     try {
       setLoading(true);
