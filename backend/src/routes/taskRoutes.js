@@ -1,18 +1,17 @@
 const express = require("express");
 const router = express.Router();
-const taskController = require("../controllers/taskController");
+const controller = require("../controllers/taskController");
 
-// Search FIRST
-router.get("/search", taskController.searchTasks);
+// search route
+router.get("/search", controller.searchTasks);
 
-// CRUD
-router.post("/", taskController.createTask);
-router.get("/", taskController.getTasks);
-router.get("/:id", taskController.getTask);
-router.put("/:id", taskController.updateTask);
-router.delete("/:id", taskController.deleteTask);
+// CRUD routes
+router.post("/", controller.createTask);
+router.get("/", controller.getTasks);
+router.put("/:id", controller.updateTask);
+router.delete("/:id", controller.deleteTask);
 
-// Status
-router.patch("/:id/status", taskController.updateStatus);
+// status update
+router.patch("/:id/status", controller.updateStatus);
 
 module.exports = router;

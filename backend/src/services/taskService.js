@@ -1,41 +1,105 @@
 const Task = require("../models/taskModel");
+const mongoose = require("mongoose");
 
-// Create
+// service layer contains validation and core business logic
+// before interacting with the database
+
+const isValidId = (id) => mongoose.Types.ObjectId.isValid(id);
+
+// create task with validation
 const createTask = async (data) => {
-  return await Task.create(data);
+  let { title, description } = data;
+
+  if (!title || title.trim() === "") {
+    throw new Error("Title is required");
+  }
+
+  title = title.trim();
+
+  if (title.length < 3) {
+    throw new Error("Title must be at least 3 characters");
+  }
+
+  if (title.length > 50) {
+    throw new Error("Title too long");
+  }
+
+  if (description && description.length > 200) {
+    throw new Error("Description too long");
+  }
+
+  const task = new Task({
+    title,
+    description: description || "",
+  });
+
+  return await task.save();
 };
 
-// Get All
+// get all tasks
 const getAllTasks = async () => {
   return await Task.find().sort({ createdAt: -1 });
 };
 
-// Get One
-const getTaskById = async (id) => {
-  return await Task.findById(id);
-};
-
-// Update
+// update task title
 const updateTask = async (id, data) => {
-  return await Task.findByIdAndUpdate(id, data, { new: true });
+  if (!isValidId(id)) throw new Error("Invalid task ID");
+
+  let { title } = data;
+
+  if (!title || title.trim() === "") {
+    throw new Error("Title cannot be empty");
+  }
+
+  title = title.trim();
+
+  const updated = await Task.findByIdAndUpdate(
+    id,
+    { title },
+    { new: true }
+  );
+
+  if (!updated) throw new Error("Task not found");
+
+  return updated;
 };
 
-// Delete
+// delete task
 const deleteTask = async (id) => {
-  return await Task.findByIdAndDelete(id);
+  if (!isValidId(id)) throw new Error("Invalid task ID");
+
+  const deleted = await Task.findByIdAndDelete(id);
+
+  if (!deleted) throw new Error("Task not found");
+
+  return deleted;
 };
 
-// Update Status
+// update status with validation
 const updateTaskStatus = async (id, status) => {
-  return await Task.findByIdAndUpdate(
+  if (!isValidId(id)) throw new Error("Invalid task ID");
+
+  const allowed = ["pending", "completed"];
+
+  if (!allowed.includes(status)) {
+    throw new Error("Invalid status value");
+  }
+
+  const updated = await Task.findByIdAndUpdate(
     id,
     { status },
     { new: true }
   );
+
+  if (!updated) throw new Error("Task not found");
+
+  return updated;
 };
 
-// Search
+// search tasks
 const searchTasks = async (query) => {
+  if (!query || query.trim() === "") return [];
+
   return await Task.find({
     title: { $regex: query, $options: "i" },
   });
@@ -44,7 +108,6 @@ const searchTasks = async (query) => {
 module.exports = {
   createTask,
   getAllTasks,
-  getTaskById,
   updateTask,
   deleteTask,
   updateTaskStatus,
