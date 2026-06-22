@@ -1,7 +1,7 @@
 const taskService = require("../services/taskService");
 
-// controller layer handles request/response
-// business logic is handled in service layer
+// controller handles request/response
+// service layer contains logic
 
 const createTask = async (req, res) => {
   try {

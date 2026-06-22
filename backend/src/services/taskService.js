@@ -1,12 +1,10 @@
 const Task = require("../models/taskModel");
 const mongoose = require("mongoose");
 
-// service layer contains validation and core business logic
-// before interacting with the database
+// service layer handles validation + business logic
 
 const isValidId = (id) => mongoose.Types.ObjectId.isValid(id);
 
-// create task with validation
 const createTask = async (data) => {
   let { title, description } = data;
 
@@ -36,12 +34,10 @@ const createTask = async (data) => {
   return await task.save();
 };
 
-// get all tasks
 const getAllTasks = async () => {
   return await Task.find().sort({ createdAt: -1 });
 };
 
-// update task title
 const updateTask = async (id, data) => {
   if (!isValidId(id)) throw new Error("Invalid task ID");
 
@@ -64,7 +60,6 @@ const updateTask = async (id, data) => {
   return updated;
 };
 
-// delete task
 const deleteTask = async (id) => {
   if (!isValidId(id)) throw new Error("Invalid task ID");
 
@@ -75,7 +70,6 @@ const deleteTask = async (id) => {
   return deleted;
 };
 
-// update status with validation
 const updateTaskStatus = async (id, status) => {
   if (!isValidId(id)) throw new Error("Invalid task ID");
 
@@ -96,7 +90,6 @@ const updateTaskStatus = async (id, status) => {
   return updated;
 };
 
-// search tasks
 const searchTasks = async (query) => {
   if (!query || query.trim() === "") return [];
 

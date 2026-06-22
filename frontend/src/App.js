@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import API from "./api";
 
+// frontend communicates with backend APIs using axios
+// UI updates dynamically after each API call
+
 function App() {
   const [tasks, setTasks] = useState([]);
   const [title, setTitle] = useState("");
@@ -28,6 +31,7 @@ function App() {
     fetchTasks();
   }, []);
 
+  // Add task → POST
   const addTask = async () => {
     try {
       await API.post("/", { title });
@@ -38,6 +42,7 @@ function App() {
     }
   };
 
+  // Delete → DELETE
   const deleteTask = async (id) => {
     try {
       await API.delete(`/${id}`);
@@ -47,6 +52,7 @@ function App() {
     }
   };
 
+  // Update → PUT
   const updateTask = async () => {
     try {
       await API.put(`/${editId}`, { title: editText });
@@ -58,6 +64,7 @@ function App() {
     }
   };
 
+  // Toggle → PATCH
   const toggleStatus = async (id, status) => {
     try {
       await API.patch(`/${id}/status`, {
@@ -69,6 +76,7 @@ function App() {
     }
   };
 
+  // Search → GET
   const handleSearch = async () => {
     try {
       const res = await API.get(`/search?q=${search}`);

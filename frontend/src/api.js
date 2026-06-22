@@ -1,5 +1,6 @@
 import axios from "axios";
 
+// API config for local + production
 const BASE_URL =
   process.env.NODE_ENV === "development"
     ? "http://localhost:5000/api/tasks"
